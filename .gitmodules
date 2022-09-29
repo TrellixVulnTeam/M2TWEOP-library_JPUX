@@ -1,4 +1,4 @@
 [submodule "M2TWEOP-luaPlugin"]
 	path = M2TWEOP-luaPlugin
-	url = https://github.com/youneuoy/M2TWEOP-luaPlugin.git
+	url = git://github.com/youneuoy/M2TWEOP-luaPlugin.git
 	branch = master
