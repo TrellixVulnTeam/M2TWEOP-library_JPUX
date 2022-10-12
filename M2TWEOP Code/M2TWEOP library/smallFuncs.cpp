@@ -91,7 +91,7 @@ namespace smallFuncs
 		}
 
 
-		//unlock change_faction 
+		//unlock change_faction
 		uchar nops1[6] = { 0x90,0x90,0x90,0x90,0x90,0x90 };
 		if (globals::dataS.gamever == 2)//steam
 		{
@@ -221,7 +221,7 @@ namespace smallFuncs
 	}
 
 
-	bool highlightOn = false;
+	bool isHighlightOn = false;
 	NOINLINE EOP_EXPORT void swUnBMapHighlight()
 	{
 		static unsigned char highLightOn = 0x8f;
@@ -237,15 +237,15 @@ namespace smallFuncs
 			codeAdr = 0x009e1a64;
 		}
 
-		if (!highlightOn)
+		if (!isHighlightOn)
 		{
 			MemWork::WriteData(&highLightOn, codeAdr + 0x1, 1);
-			highlightOn = true;
+			isHighlightOn = true;
 		}
 		else
 		{
 			MemWork::WriteData(&highLightOff, codeAdr + 0x1, 1);
-			highlightOn = false;
+			isHighlightOn = false;
 		}
 
 
@@ -345,7 +345,7 @@ namespace smallFuncs
 		{
 
 			if (retS != nullptr)
-			{			
+			{
 				if (retS->nameCrypt == (int)cryptS[1])
 				{
 					isFinded = true;
