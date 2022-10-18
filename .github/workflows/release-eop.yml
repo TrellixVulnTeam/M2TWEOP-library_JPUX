@@ -24,7 +24,7 @@ jobs:
     if: "startsWith(github.event.head_commit.message, 'Release')"
     permissions:
         contents: write
-
+    steps:
     # Pull down latest source code and modules
     - name: "Checkout from latest commit: '${{ github.event.head_commit.message }}'"
       uses: actions/checkout@v3
