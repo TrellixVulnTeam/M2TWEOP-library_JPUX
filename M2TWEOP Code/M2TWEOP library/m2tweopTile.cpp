@@ -5,33 +5,56 @@ void m2tweopTile::buildTile(int x, int y)
 	xTile = x;
 	yTile = y;
 	tileRegionID = fastFuncts::getTileRegionID(xTile, yTile);
+	factionStruct* owner = fastFuncts::getRegionOwner(tileRegionID);
 
-	settlementStruct* sett= fastFuncts::findSettlement(xTile, yTile);
+	if (owner != nullptr)
+	{
+		ownerDipNum = owner->dipNum;
+	}
+
+
+	settlementStruct* sett = fastFuncts::findSettlement(xTile, yTile);
 	if (sett != nullptr)
 	{
 		buildAsSettlementTile();
+		return;
 	}
-	else
+
+	auto* fort = fastFuncts::findFort(xTile, yTile);
+	if (fort != nullptr)
 	{
-		factionStruct* owner=fastFuncts::getRegionOwner(tileRegionID);
+		buildAsFortTile();
+		return;
+	}
+	auto* port = fastFuncts::findPort(xTile, yTile);
+	if (port != nullptr)
+	{
+		buildAsPortTile();
+		return;
+	}
+	auto* army = fastFuncts::findArmy(xTile, yTile);
+	if (army != nullptr)
+	{
+		buildAsArmyTile(army);
+		return;
+	}
 
-		if (owner != nullptr)
-		{
-			ownerDipNum = owner->dipNum;
 
-			tileColor.x= owner->factSmDescr->primary_colour_red / 255.0F;
-			tileColor.y= owner->factSmDescr->primary_colour_green / 255.0F;
-			tileColor.z= owner->factSmDescr->primary_colour_blue / 255.0F;
+	if (owner != nullptr)
+	{
+
+		tileColor.x = owner->factSmDescr->primary_colour_red / 255.0F;
+		tileColor.y = owner->factSmDescr->primary_colour_green / 255.0F;
+		tileColor.z = owner->factSmDescr->primary_colour_blue / 255.0F;
 
 
-			tileSecColor.x= owner->factSmDescr->secondary_colour_red / 255.0F;
-			tileSecColor.y= owner->factSmDescr->secondary_colour_green / 255.0F;
-			tileSecColor.z= owner->factSmDescr->secondary_colour_blue / 255.0F;
-		}
+		tileSecColor.x = owner->factSmDescr->secondary_colour_red / 255.0F;
+		tileSecColor.y = owner->factSmDescr->secondary_colour_green / 255.0F;
+		tileSecColor.z = owner->factSmDescr->secondary_colour_blue / 255.0F;
 	}
 }
 
-bool m2tweopTile::drawTile(const ImVec2& tileSize, const ImVec2& coordsStart, vector<ImVec2>* borders)
+bool m2tweopTile::drawTile(const ImVec2& tileSize, const ImVec2& coordsStart, vector<ImVec2>* borders, bool isSelectedNow)
 {
 	bool isSelected = false;
 
@@ -44,11 +67,22 @@ bool m2tweopTile::drawTile(const ImVec2& tileSize, const ImVec2& coordsStart, ve
 		break;
 	case tileContent::army:
 		break;
+	case tileContent::port:
+		break;
+	case tileContent::fort:
+		break;
 	}
 
-	ImVec2 butCoords= ImGui::GetCursorPos();
+	ImVec2 butCoords = ImGui::GetCursorPos();
 
-	ImGui::PushStyleColor(ImGuiCol_Button, tileColor);
+	if (isSelectedNow)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f - tileColor.x, 1.f - tileColor.y, 1.f - tileColor.z, tileColor.w));
+	}
+	else
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, tileColor);
+	}
 
 	isSelected = ImGui::Button("", tileSize);
 	if (ImGui::IsItemHovered())
@@ -115,14 +149,25 @@ bool m2tweopTile::buildBorder(const shared_ptr<m2tweopTile>& leftTile, const sha
 	return false;
 }
 
+bool m2tweopTile::IsSameCoords(shared_ptr<m2tweopTile> anotherTile)
+{
+	if (anotherTile->tileRegionID != tileRegionID)
+	{
+		return false;
+	}
+	int anX = anotherTile->xTile;
+	int anY = anotherTile->yTile;
+	return (anX == xTile && anY == yTile);
+}
+
 bool m2tweopTile::isNeighbor(shared_ptr<m2tweopTile> anotherTile)
 {
 	if (anotherTile->tileRegionID == tileRegionID)
 	{
 		return false;
 	}
-	int anX=anotherTile->xTile;
-	int anY=anotherTile->yTile;
+	int anX = anotherTile->xTile;
+	int anY = anotherTile->yTile;
 
 	int coordsDif = abs(xTile - anX) + abs(yTile - anY);
 
@@ -136,10 +181,41 @@ bool m2tweopTile::isNeighbor(shared_ptr<m2tweopTile> anotherTile)
 void m2tweopTile::buildAsSettlementTile()
 {
 	tileColor.x = 1.0F;
-	tileColor.y =1.0F;
+	tileColor.y = 1.0F;
 	tileColor.z = 1.0F;
 
 	tileCont = tileContent::settlement;
 
 
+}
+
+void m2tweopTile::buildAsFortTile()
+{
+	tileColor.x = 0.9F;
+	tileColor.y = 0.9F;
+	tileColor.z = 0.9F;
+
+	tileCont = tileContent::fort;
+}
+void m2tweopTile::buildAsPortTile()
+{
+	tileColor.x = 0.8F;
+	tileColor.y = 0.8F;
+	tileColor.z = 0.8F;
+
+	tileCont = tileContent::port;
+}
+
+void m2tweopTile::buildAsArmyTile(stackStruct* army)
+{
+	factionStruct* fac = army->faction;
+
+	if (fac != nullptr)
+	{
+		tileColor.x = fac->factSmDescr->secondary_colour_red / 255.0F;
+		tileColor.y = fac->factSmDescr->secondary_colour_green / 255.0F;
+		tileColor.z = fac->factSmDescr->secondary_colour_blue / 255.0F;
+	}
+
+	tileCont = tileContent::army;
 }

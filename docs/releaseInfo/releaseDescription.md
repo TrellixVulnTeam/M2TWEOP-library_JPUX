@@ -4,11 +4,13 @@
 
  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D4DZTHG)
  [![Build Status](https://img.shields.io/discord/713369537948549191?color=red&label=Discord&style=for-the-badge)](https://discord.gg/Epqjm8u2WK)
+ [![Build Status](https://img.shields.io/github/v/release/youneuoy/M2TWEOP-library?label=Download&style=for-the-badge)](#download)
+
 
 ## **Release Notes**
 
 ### **Breaking Changes**
-- Renamed "`etResourceCode`" to "`getResourceID`" for uniformity :: WARNING: backwards incompatibility! - *Callistonian*
+- Renamed "`getResourceCode`" to "`getResourceID`" for uniformity :: WARNING: backwards incompatibility! - *Callistonian*
 
 ### **Launcher**
 - Added M2TWEOP health checker (this will appear automatically if there are potential startup problems) - *youneuoy*
@@ -26,7 +28,9 @@
 ### **Library**
 - Hotseat: select battle winner without casualties - *youneuoy*
 - DeveloperMode: activated by ctrl+2 - *youneuoy*
+-  ![](https://cdn.discordapp.com/attachments/744326498151825409/1032004917033975859/unknown.png)
 - DeveloperMode: BattleMapOverrider, useful for custom maps testing. - *youneuoy*
+- backspace(stop movement button)now work at campaign map(but only if human players<2, i.e. not in multiplayer hotseats).
 
 ### **Lua Plugin**
 - EduEntry table: new fields - *youneuoy*
@@ -38,6 +42,8 @@
 - Renamed "`getResourceCode`" to "`getResourceID`" for uniformity :: WARNING: backwards incompatibility! - *Callistonian*
 - Added trade resource getters for `hasMine` and image (icon) - *Callistonian*
 - campaign table: GetUnitSize function - *youneuoy*
+- new ugly console - *youneuoy*
+
 
 ### **Documentation**
 - Updated Erken's ImGUI tutorial to V3 (Thanks again Erken!) - *Medik*
@@ -52,3 +58,6 @@
 ### **Links**
 * [EOP Documentation](https://youneuoy.github.io/M2TWEOP-library/)
 * [EOP Discord](https://discord.gg/cG2Paep9)
+
+# Download
+<a id="download"></a>

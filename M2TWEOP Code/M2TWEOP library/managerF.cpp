@@ -3,6 +3,7 @@
 
 #include "onlineThings.h"
 #include "settlementConversionLvlSetter.h"
+#include "fastFunctsHelpers.h"
 void managerF::init()
 {
 
@@ -70,25 +71,30 @@ void managerF::doPachs()
 	f1 << "Done" << endl;
 
 	f1 << "Start applying stop_character patch" << endl;
-	{
-		unsigned char ret[1] = { 0xC3};
-		DWORD nPtr;
+
+	OnStopCharacter* toStopCharacter = new OnStopCharacter(mem, (LPVOID)patchesForGame::OnStopCharacter, globals::dataS.gamever);
+	toStopCharacter->SetNewCode();
+	toStopCharacter->Enable();
+    //old code, what just disable backspace
+	//{
+	//	unsigned char ret[1] = { 0xC3};
+	//	DWORD nPtr;
 
 
-		if (globals::dataS.gamever == 2)
-		{
+	//	if (globals::dataS.gamever == 2)
+	//	{
 
-			nPtr = 0x00ab5170;
+	//		nPtr = 0x00ab5170;
 
-		}
-		else
-		{
-			nPtr = 0x00ab4140;
+	//	}
+	//	else
+	//	{
+	//		nPtr = 0x00ab4140;
 
-		}
+	//	}
 
-		MemWork::WriteData(ret, nPtr,1);
-	}
+	//	MemWork::WriteData(ret, nPtr,1);
+	//}
 	f1 << "Done" << endl;
 
 
@@ -475,26 +481,12 @@ void managerF::doPachs()
 	f1.close();
 }
 
-jsn::json loadJsonFromFile(const std::string& fpath)
-{
-	jsn::json json;
-
-
-	std::ifstream f1(fpath);
-	if (f1.is_open())
-	{
-		f1 >> json;
-	}
-	f1.close();
-
-	return json;
-}
 
 void loadJsonSettings()
 {
 	std::string fPath = globals::dataS.modPatch;
 	fPath += "\\eopData\\gameCfg.json";
-	jsn::json json = loadJsonFromFile(fPath);
+	jsn::json json = fastFunctsHelpers::loadJsonFromFile(fPath);
 
 	try
 	{
@@ -535,7 +527,7 @@ NOINLINE EOP_EXPORT void managerExport::initEOP(const char* modPath, int gameVer
 	{
 		return;
 	}
-	
+
 	globals::dataS.gamever = gameVer;
 	globals::dataS.modPatch = modPath;
 

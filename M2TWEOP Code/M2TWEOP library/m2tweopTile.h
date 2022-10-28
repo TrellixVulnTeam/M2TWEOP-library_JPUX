@@ -18,13 +18,15 @@ enum class tileContent:uint8_t
 {
 	nothing,
 	settlement,
-	army
+	army,
+	fort,
+	port
 };
 class m2tweopTile
 {
 public:
 	void buildTile(int x,int y);
-	bool drawTile(const ImVec2&tileSize, const ImVec2& coordsStart, vector<ImVec2>*borders);
+	bool drawTile(const ImVec2&tileSize, const ImVec2& coordsStart, vector<ImVec2>*borders,bool isSelectedNow);
 
 	bool buildBorder(
 		const shared_ptr<m2tweopTile>& leftTile,
@@ -37,12 +39,16 @@ private:
 	bool haveUBorder = false;
 	bool haveDBorder = false;
 
-
+	bool IsSameCoords(shared_ptr<m2tweopTile> anotherTile);
 	bool isNeighbor(shared_ptr<m2tweopTile>anotherTile);
 
 	int xTile = 0;
 	int yTile = 0;
 	void buildAsSettlementTile();
+	void buildAsFortTile();
+	void buildAsPortTile();
+	void buildAsArmyTile(stackStruct* army);
+
 	int tileRegionID = 0;
 	int ownerDipNum = 0;
 

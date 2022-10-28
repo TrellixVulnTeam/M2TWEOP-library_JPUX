@@ -1,4 +1,6 @@
 #include "fastFunctsHelpers.h"
+
+#include <filesystem>
 namespace fastFunctsHelpers
 {
 	NOINLINE EOP_EXPORT void setCryptedString(char** targetS, const char* newS)
@@ -90,5 +92,54 @@ namespace fastFunctsHelpers
 		MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
 		return wstrTo;
 	}
+
+
+	namespace fs = std::filesystem;
+
+	std::string readFile(const fs::path& path)
+	{
+		// Open the stream to 'lock' the file.
+		std::ifstream f(path, std::ios::in | std::ios::binary);
+
+		// Obtain the size of the file.
+		const auto sz = fs::file_size(path);
+
+		// Create a buffer.
+		std::string result(sz, '\0');
+
+		// Read the whole file into the buffer.
+		f.read(result.data(), sz);
+
+		return result;
+	}
+
+	jsn::json loadJsonFromFile(const std::string& fpath)
+	{
+		jsn::json json;
+
+		std::string content = readFile(fpath);
+
+		json = jsn::json::parse(content,
+			/* callback */ nullptr,
+			/* allow exceptions */ true,
+			/* ignore_comments */ true);
+
+		return json;
+	}
+	jsn::json loadJsonFromFile(const std::wstring& fpath)
+	{
+		jsn::json json;
+
+
+		std::string content = readFile(fpath);
+
+		json = jsn::json::parse(content,
+			/* callback */ nullptr,
+			/* allow exceptions */ true,
+			/* ignore_comments */ true);
+
+		return json;
+	}
+
 }
 
